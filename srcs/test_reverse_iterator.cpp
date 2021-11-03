@@ -9,14 +9,16 @@ int main(void)
 	a._data[1] = 2;
 	a._data[2] = 3;
 
-	ft::reverse_iterator<ft::vector<int>::iterator> it1(a.begin()); //default constructor
-	ft::reverse_iterator<ft::vector<int>::iterator> it2 = it1; //copy assignation
-	ft::reverse_iterator<ft::vector<int>::iterator> it3(it2); //copy constructor
+	ft::vector<int>::reverse_iterator it1 = a.rbegin(); //default constructor
+	ft::vector<int>::reverse_iterator it2 = it1; //copy assignation
+	ft::vector<int>::reverse_iterator it3(it2); //copy constructor
+
+	std::cout << *(a.end() - 1) << " test " << (a.end() == it1.base()) << std::endl;
 
 	for(int i = 0; i < 3; i++)
 	{
 		std::cout << *it1 << std::endl; //operator*
-		(*it1)++; 
+		(*it1)++;
 		it1++; //operator++
 	}
 	std::cout << std::endl;

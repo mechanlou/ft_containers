@@ -9,12 +9,12 @@ class	ft::reverse_iterator
 	public :
 
 //member types
-	typedef iterator												iterator_type;
-	typedef typename iterator_traits<iterator>::iterator_category	iterator_category;
-	typedef typename iterator_traits<iterator>::value_type			value_type;
-	typedef typename iterator_traits<iterator>::difference_type		difference_type;
-	typedef typename iterator_traits<iterator>::pointer				pointer;
-	typedef typename iterator_traits<iterator>::reference			reference;
+	typedef iterator								iterator_type;
+	typedef typename iterator::iterator_category	iterator_category;
+	typedef typename iterator::value_type			value_type;
+	typedef typename iterator::difference_type		difference_type;
+	typedef typename iterator::pointer				pointer;
+	typedef typename iterator::reference			reference;
 
 //constructors
 	reverse_iterator(void){}
@@ -41,11 +41,11 @@ class	ft::reverse_iterator
 	}
 	reverse_iterator operator+(difference_type n) const
 	{
-		return (_iterator - n);
+		return (reverse_iterator(_iterator - n));
 	}
 	reverse_iterator operator-(difference_type n) const
 	{
-		return (_iterator + n);
+		return (reverse_iterator(_iterator + n));
 	}
 	reverse_iterator operator++(int) //postfix
 	{
@@ -76,7 +76,7 @@ class	ft::reverse_iterator
 	}
 	reverse_iterator &operator-=(difference_type n)
 	{
-		_iterator += n
+		_iterator += n;
 		return (*this);
 	}
 	pointer			operator->() const
@@ -85,10 +85,9 @@ class	ft::reverse_iterator
 	}
 	reference		operator[](difference_type n) const
 	{
-		return (_iterator[-n - 1]);
+		return (*(_iterator - (n - 1)));
 	}
 	
-
 	private :
 
 	iterator_type	_iterator;

@@ -12,13 +12,13 @@ class	ft::vector
 {
 	public:
 
-	typedef				T								value_type;
-	typedef				Alloc							allocator_type;
-	typedef	typename	allocator_type::reference		reference;
-	typedef	typename	allocator_type::const_reference	const_reference;
-	typedef	typename	allocator_type::pointer			pointer;
-	typedef	typename	allocator_type::const_pointer	const_pointer;
-	typedef				size_t							size_type;
+	typedef				T									value_type;
+	typedef				Alloc								allocator_type;
+	typedef	typename	allocator_type::reference			reference;
+	typedef	typename	allocator_type::const_reference		const_reference;
+	typedef	typename	allocator_type::pointer				pointer;
+	typedef	typename	allocator_type::const_pointer		const_pointer;
+	typedef				size_t								size_type;
 
 //constructors
 	//default
@@ -246,7 +246,7 @@ class	ft::vector
 		{
 			const_iterator	result;
 
-			result._data = _data + n;
+			result._data = _data - n;
 			return (result);
 		}
 		bool			operator<(const_iterator const &other) const
@@ -285,25 +285,34 @@ class	ft::vector
 		T const	*_data;
 	};
 
+//typedef for reverse_iterator
+	typedef	ft::reverse_iterator<iterator>	reverse_iterator;
+	// typedef				ft::reverse_iterator<const_iterator>	const_reverse_iterator;
+
 //iterator functions
 	iterator		begin(void)
 	{
 		return	(iterator(_data));
 	}
-
 	const_iterator	begin(void)	const
 	{
 		return (const_iterator(_data));
 	}
-
 	iterator		end(void)
 	{
 		return (iterator(_data + _size));
 	}
-
 	const_iterator	end(void) const
 	{
 		return (const_iterator(_data + _size));
+	}
+	reverse_iterator	rbegin(void)
+	{
+		return (reverse_iterator(end()));
+	}
+	reverse_iterator	rend(void)
+	{
+		return (reverse_iterator(begin()));
 	}
 
 	allocator_type	_allocator;
