@@ -21,11 +21,11 @@ class	ft::reverse_iterator
 	template <class Iter>
 	reverse_iterator(const reverse_iterator<Iter>& rev_it)
 	{
-		_iterator = rev_it.base();
+		_iterator = rev_it._iterator;
 	}
 	explicit reverse_iterator(iterator_type src)
 	{
-		_iterator = src - 1;
+		_iterator = src;
 	}
 //destructor
 	virtual	~reverse_iterator(void){}
@@ -37,16 +37,56 @@ class	ft::reverse_iterator
 	}
 	reference	operator*(void) const
 	{
-		return (*_iterator);
+		return (*(_iterator - 1));
 	}
-	// reverse_iterator operator+(difference_type n) const
-	// {
-	// 	return (_iterator - n);
-	// }
-	// reverse_iterator operator-(difference_type n) const
-	// {
-	// 	return (_iterator + n);
-	// }
+	reverse_iterator operator+(difference_type n) const
+	{
+		return (_iterator - n);
+	}
+	reverse_iterator operator-(difference_type n) const
+	{
+		return (_iterator + n);
+	}
+	reverse_iterator operator++(int) //postfix
+	{
+		reverse_iterator temp = *this;
+		++(*this);
+		return (temp);
+	}
+	reverse_iterator &operator++() //prefix
+	{
+		--_iterator;
+		return (*this);
+	}
+	reverse_iterator &operator--()
+	{
+		++_iterator;
+		return (*this);
+	}
+	reverse_iterator operator--(int)
+	{
+		reverse_iterator temp = *this;
+		--(*this);
+		return (temp);
+	}
+	reverse_iterator &operator+=(difference_type n)
+	{
+		_iterator -= n;
+		return (*this);
+	}
+	reverse_iterator &operator-=(difference_type n)
+	{
+		_iterator += n
+		return (*this);
+	}
+	pointer			operator->() const
+	{
+		return &(operator*());
+	}
+	reference		operator[](difference_type n) const
+	{
+		return (_iterator[-n - 1]);
+	}
 	
 
 	private :

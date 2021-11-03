@@ -22,7 +22,7 @@ struct	ft::iterator_traits<ft::base_iterator<ft::random_access_iterator_tag, T> 
 template <class T>
 struct	ft::iterator_traits<T*>
 {
-	typedef	ptrdiff_t					difference_type;
+	typedef	int					difference_type; // remettre ptrdiff_t
 	typedef	T							value_type;
 	typedef	T*							pointer;
 	typedef	T&							reference;
@@ -32,7 +32,7 @@ struct	ft::iterator_traits<T*>
 template <class T>
 struct	ft::iterator_traits<const T*>
 {
-	typedef	ptrdiff_t					difference_type;
+	typedef	int					difference_type; // remettre ptrdiff_t
 	typedef	T							value_type;
 	typedef	const T*					pointer;
 	typedef const T&					reference;
