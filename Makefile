@@ -9,11 +9,11 @@ HEADERS = \
 			headers/Is_integral.hpp \
 			headers/Enable_if.hpp \
 			headers/Iterator_traits.hpp \
-			headers/Base_iterator.hpp
-			# headers/reverse_iterator.hpp
+			headers/Base_iterator.hpp \
+			headers/Reverse_iterator.hpp
 
 SRCS = \
-		srcs/test_reverse_iterator.cpp
+		srcs/test_const_reverse_iterator.cpp
 
 OBJS = ${SRCS:.cpp=.o}
 

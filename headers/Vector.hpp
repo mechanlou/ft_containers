@@ -129,7 +129,7 @@ class	ft::vector
 		{
 			iterator	result;
 
-			result._data = _data + n;
+			result._data = _data - n;
 			return (result);
 		}
 		bool		operator<(iterator const &other) const
@@ -286,31 +286,40 @@ class	ft::vector
 	};
 
 //typedef for reverse_iterator
-	typedef	ft::reverse_iterator<iterator>	reverse_iterator;
-	// typedef				ft::reverse_iterator<const_iterator>	const_reverse_iterator;
+	typedef	ft::reverse_iterator<iterator>			reverse_iterator;
+	typedef	ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 
 //iterator functions
-	iterator		begin(void)
-	{
-		return	(iterator(_data));
-	}
 	const_iterator	begin(void)	const
 	{
 		return (const_iterator(_data));
-	}
-	iterator		end(void)
-	{
-		return (iterator(_data + _size));
 	}
 	const_iterator	end(void) const
 	{
 		return (const_iterator(_data + _size));
 	}
-	reverse_iterator	rbegin(void)
+	iterator		begin(void)
+	{
+		return	(iterator(_data));
+	}
+	iterator		end(void)
+	{
+		return (iterator(_data + _size));
+	}
+
+	const_reverse_iterator	rbegin(void) const
+	{
+		return (const_reverse_iterator(end()));
+	}
+	const_reverse_iterator	rend(void) const
+	{
+		return (const_reverse_iterator(begin()));
+	}
+	reverse_iterator		rbegin(void)
 	{
 		return (reverse_iterator(end()));
 	}
-	reverse_iterator	rend(void)
+	reverse_iterator		rend(void)
 	{
 		return (reverse_iterator(begin()));
 	}

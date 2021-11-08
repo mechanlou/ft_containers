@@ -9,16 +9,15 @@ int main(void)
 	a._data[1] = 3;
 	a._data[2] = 4;
 
-	ft::vector<int>::reverse_iterator it1 = a.rbegin(); //default constructor
-	ft::vector<int>::reverse_iterator it2 = it1; //copy assignation
-	ft::vector<int>::reverse_iterator it3(it2); //copy constructor
+	ft::vector<int>::const_reverse_iterator it1 = a.rbegin(); //default constructor
+	ft::vector<int>::const_reverse_iterator it2 = it1; //copy assignation
+	ft::vector<int>::const_reverse_iterator it3(it2); //copy constructor
 	
 	std::cout << "it1 == it2 ? " << (it1 == it2) << std::endl;
 	std::cout << "it1 != it2 ? " << (it1 != it2) << std::endl;
 	while (it1 != a.rend())
 	{
 		std::cout << *it1 << std::endl; //operator*
-		(*it1)++;
 		it1++; //operator++
 	}
 	std::cout << "it1 == it2 ? " << (it1 == it2) << std::endl;
@@ -28,12 +27,11 @@ int main(void)
 	while (it3 != a.rend())
 	{
 		std::cout << *it3 << std::endl;
-		(*it3)++;
 		it3++;
 	}
 	std::cout << std::endl;
 
-	ft::reverse_iterator<ft::vector<int>::iterator> it4 = a.rend();
+	ft::reverse_iterator<ft::vector<int>::const_iterator> it4 = a.rend();
 	while (it4 != a.rbegin())
 	{
 		--it4; //operator--
