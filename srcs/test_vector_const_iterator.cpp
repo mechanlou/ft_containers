@@ -3,15 +3,15 @@
 
 int main(void)
 {
-	const ft::vector<int> a(4, 1995);
-	ft::vector<int>::const_iterator it1; //default constructor
+	ft::vector<int> a(4, 1995);
+	ft::vector<int>::const_iterator it1 = a.begin(); //default constructor
 	ft::vector<int>::const_iterator it2;
 
 	it1 = a.begin(); //copy assignation
 	it2 = it1; //copy assignation
 	ft::vector<int>::const_iterator it3(it2); //copy constructor
 
-	//(*it1)++; does not work because its const :D
+	// (*it1)++; //does not work because its const :D
 
 	std::cout << "it1 == it2 ? " << (it1 == it2) << std::endl;
 	std::cout << "it1 != it2 ? " << (it1 != it2) << std::endl;

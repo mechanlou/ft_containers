@@ -166,7 +166,7 @@ namespace ft
 	bool operator!=(const reverse_iterator<IteratorL>& lhs,
 						const reverse_iterator<IteratorR>& rhs)
 	{
-		return (lhs.base()._data != rhs.base());
+		return (lhs.base() != rhs.base());
 	}
 
 	template <class IteratorL, class IteratorR>

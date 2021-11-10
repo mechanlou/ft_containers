@@ -4,7 +4,7 @@
 
 int main(void)
 {
-	ft::vector<int> a(3, 12);
+	const ft::vector<int> a(3, 12);  // \\ TO FIX ! doesn't work without const
 	a._data[0] = 2;
 	a._data[1] = 3;
 	a._data[2] = 4;

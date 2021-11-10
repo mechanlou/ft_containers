@@ -13,6 +13,7 @@ int main(void)
 
 	std::cout << "it1 == it2 ? " << (it1 == it2) << std::endl;
 	std::cout << "it1 != it2 ? " << (it1 != it2) << std::endl;
+	int i = 0;
 	while (it1 != a.end())
 	{
 		std::cout << *it1 << std::endl; //operator*

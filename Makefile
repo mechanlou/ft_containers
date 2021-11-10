@@ -13,7 +13,8 @@ HEADERS = \
 			headers/Reverse_iterator.hpp
 
 SRCS = \
-		srcs/test_const_reverse_iterator.cpp
+		srcs/test_vector_capacity_functions.cpp
+		# srcs/test_vector_element_access.cpp
 
 OBJS = ${SRCS:.cpp=.o}
 
