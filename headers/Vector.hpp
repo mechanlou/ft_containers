@@ -162,7 +162,7 @@ class	ft::vector
 		{
 			i = n;
 			while (i < _size)
-				_data[i++].~T();
+				_data[i++].~value_type();
 		}
 		_size = n;
 	}
@@ -193,6 +193,7 @@ class	ft::vector
 			_capacity = n;
 		}
 	}
+
 //element access funcitons
 	reference		operator[](size_type n)
 	{
@@ -231,6 +232,31 @@ class	ft::vector
 		return (*(_data + _size - 1));
 	}
 
+//modifier functions
+	template <class InputIterator>
+	void	assign(InputIterator first, enable_if(!is_integral InputIterator last)
+	{
+		
+	}
+	void	assign(size_type n, const value_type& val)
+	{
+		size_type	i;
+	
+		i = 0;
+		while (i < _size)
+			_data[i++].~value_type();
+		_size = n;
+		if (_size > _capacity)
+		{
+			_allocator.deallocate(_data, _capacity);
+			_capacity = _size * CAPACITY_SCALE;
+			_data = _allocator.allocate(_capacity);
+		}
+		i = 0;
+		while (i < _size)
+			_data[i++] = val;
+	}
+
 	private:
 
 	allocator_type	_allocator;
@@ -261,6 +287,28 @@ class	ft::vector
 		i = 0;
 		while (i < _size)
 			_data[i++] = val;
+	}
+	template <class InputIterator>
+	void	_range_assign(InputIterator first, InputIterator last)
+	{
+		size_type	i;
+	
+		i = 0;
+		while (i < _size)
+			_data[i++].~value_type();
+		_size = last - first;
+		if (_size > _capacity)
+		{
+			_allocator.deallocate(_data, _capacity);
+			_capacity = _size * CAPACITY_SCALE;
+			_data = _allocator.allocate(_capacity);
+		}
+		i = 0;
+		while (first != last)
+		{
+			_data[i++] = *first;
+			first++;
+		}
 	}
 };
 
