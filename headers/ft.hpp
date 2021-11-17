@@ -14,6 +14,7 @@ namespace	ft
 	template <class T> struct 		iterator_traits<const T*>;
 	template <class T> struct		iterator_traits<base_iterator<random_access_iterator_tag, T> >;
 	template <class iterator> struct					iterator_traits< reverse_iterator<iterator> >;
-	template<bool Cond, class T = void> struct			enable_if;
-	template<class T> struct							enable_if<true, T>;
+// enable_if
+	template<bool Cond, class T> struct enable_if {};
+	template<class T> struct enable_if<true, T> { typedef T type; };
 }

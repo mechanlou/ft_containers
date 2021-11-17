@@ -7,14 +7,13 @@ HEADERS = \
 			headers/externals.hpp \
 			headers/Vector.hpp \
 			headers/Is_integral.hpp \
-			headers/Enable_if.hpp \
 			headers/Iterator_traits.hpp \
 			headers/Base_iterator.hpp \
 			headers/Reverse_iterator.hpp
+			# headers/Enable_if.hpp \
 
 SRCS = \
 		srcs/test_vector_modifier_functions.cpp
-		# srcs/test_vector_capacity_functions.cpp
 
 OBJS = ${SRCS:.cpp=.o}
 
@@ -26,7 +25,7 @@ $(NAME): $(OBJS) $(HEADERS)
 	clang++ $(OBJS) -o $(NAME)
 
 $(OBJS): %.o: %.cpp $(HEADERS)
-	clang++ -Wall -Wextra -Werror -std=c++98 -I$(HEADERS_FILE) -c $< -o $@
+	clang++ -Wall -Wextra -Werror -std=c++98 -g3 -I$(HEADERS_FILE) -c $< -o $@
 	#clang++ -std=c++98 -I$(HEADERS_FILE) -c $< -o $@
 
 clean:
