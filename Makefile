@@ -4,6 +4,8 @@ HEADERS_FILE = headers
 
 HEADERS = \
 			headers/ft.hpp \
+			headers/Pair.hpp \
+			headers/Map.hpp \
 			headers/externals.hpp \
 			headers/Vector.hpp \
 			headers/Is_integral.hpp \
@@ -13,7 +15,7 @@ HEADERS = \
 			# headers/Enable_if.hpp \
 
 SRCS = \
-		srcs/test_vector_modifier_functions.cpp
+		srcs/test_map_constructor.cpp
 
 OBJS = ${SRCS:.cpp=.o}
 

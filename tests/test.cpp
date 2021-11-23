@@ -1,22 +1,18 @@
-// #include "truc.hpp"
 #include <iostream>
+#include <map>
 #include <string>
-#include <iterator>
-#include "../headers/Vector.hpp"
-#include "../headers/Is_integral.hpp"
-
-template <class T>
-bool	func(T a)
-{
-	(void) a;
-	return (ft::is_integral<T>::value);
-}
 
 int main(void)
 {
-	ft::vector<int>::iterator a;
+	std::map<int, std::string> a;
 
-	std::cout << func(a) << std::endl;
+	a[1] = "bite";
+	a[2] = "karma";
+	a[-1] = "t ki a leur ki l est";
+	std::cout << a[1] << " " << a[2] << " " << a[-1] << std::endl;
+	std::cout << a.size() << std::endl;
+	std::pair<int, std::string> pair1(1, "test");
+	std::pair<int, std::string> pair2(pair1);
+
 	return (0);
 }
-
