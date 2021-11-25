@@ -153,45 +153,57 @@ node	*deep_copy(node const *other)
 	return (curr);
 }
 
+
+
 int main(void)
 {
 	node	*root = NULL;
-	node	*clone = NULL;
+	// node	*clone = NULL;
 
-	root = insert(12, root);
-	root = insert(5, root);
-	root = insert(15, root);
-	root = insert(3, root);
-	root = insert(7, root);
-	root = insert(13, root);
-	root = insert(17, root);
-	root = insert(1, root);
-	root = insert(9, root);
-	root = insert(14, root);
+	root = insert(25, root);
 	root = insert(20, root);
+	root = insert(36, root);
+	root = insert(10, root);
+	root = insert(22, root);
+	root = insert(30, root);
+	root = insert(40, root);
+	root = insert(5, root);
+	root = insert(12, root);
+	root = insert(28, root);
+	root = insert(38, root);
+	root = insert(48, root);
+	root = insert(1, root);
 	root = insert(8, root);
-	root = insert(11, root);
-	root = insert(18, root);
+	root = insert(15, root);
+	root = insert(45, root);
+	root = insert(50, root);
 	printBT(root);
 
 	std::cout << "size : " << size(root) << std::endl;
 
-	remove(5, root);
-	printBT(root);
-	remove(20, root);
-	printBT(root);
-	remove(1, root);
-	printBT(root);
-	remove(12, root);
-	printBT(root);
+	// remove(5, root);
+	// printBT(root);
+	// remove(20, root);
+	// printBT(root);
+	// remove(1, root);
+	// printBT(root);
+	// remove(12, root);
+	// printBT(root);
 
-	std::cout << "size : " << size(root) << std::endl << std::endl;
+	// std::cout << "size : " << size(root) << std::endl << std::endl;
 
-	std::cout << "Clone one :" << std::endl;
-	clone = deep_copy(root);
-	printBT(clone);
-	std::cout << "size : " << size(clone) << std::endl;
+	// std::cout << "Clone one :" << std::endl;
+	// clone = deep_copy(root);
+	// printBT(clone);
+	// std::cout << "size : " << size(clone) << std::endl;
 
+	node *it = get_min(root);
+	while (it)
+	{
+		std::cout <<  " < " << it->data;
+		it = get_next(it);
+	}
+	std::cout << std::endl;
 
 	return (0);
 }

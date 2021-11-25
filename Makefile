@@ -15,7 +15,8 @@ HEADERS = \
 			# headers/Enable_if.hpp \
 
 SRCS = \
-		srcs/test_map_constructor.cpp
+		srcs/test_map_modifier_functions.cpp
+		# srcs/test_map_accessor.cpp
 
 OBJS = ${SRCS:.cpp=.o}
 

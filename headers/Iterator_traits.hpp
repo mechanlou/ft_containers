@@ -20,6 +20,16 @@ struct	ft::iterator_traits<ft::base_iterator<ft::random_access_iterator_tag, T> 
 };
 
 template <class T>
+struct	ft::iterator_traits<ft::base_iterator<ft::bidirectional_iterator_tag, T> >
+{
+	typedef	typename base_iterator<bidirectional_iterator_tag, T>::difference_type		difference_type;
+	typedef	typename base_iterator<bidirectional_iterator_tag, T>::value_type			value_type;
+	typedef	typename base_iterator<bidirectional_iterator_tag, T>::pointer				pointer;
+	typedef	typename base_iterator<bidirectional_iterator_tag, T>::reference			reference;
+	typedef	typename base_iterator<bidirectional_iterator_tag, T>::iterator_category	iterator_category;
+};
+
+template <class T>
 struct	ft::iterator_traits<T*>
 {
 	typedef	ptrdiff_t					difference_type;
