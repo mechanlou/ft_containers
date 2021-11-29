@@ -3,6 +3,8 @@
 #include "ft.hpp"
 #include "Base_iterator.hpp"
 #include "Pair.hpp"
+#include "Iterator_traits.hpp"
+#include "Reverse_iterator.hpp"
 
 template <class Key, class T, class Compare, class Alloc>
 class	ft::map
@@ -25,25 +27,25 @@ class	ft::map
 	struct	node;
 	class	iterator;
 	class	const_iterator;
-	// typedef	typename iterator_traits<iterator>::difference_type	difference_type;
-	// typedef	ft::reverse_iterator<iterator>			reverse_iterator;
-	// typedef	ft::reverse_iterator<const_iterator>	const_reverse_iterator;
+	typedef	typename iterator_traits<typename iterator::base_iterator>::difference_type	difference_type;
+	typedef	ft::reverse_iterator<iterator>			reverse_iterator;
+	typedef	ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 
 // constructors
 	explicit	map(const key_compare& comp = key_compare(),
 		const allocator_type& alloc = allocator_type())
 		: _comp(comp), _alloc(alloc), _root(NULL) {}
 	template <class InputIterator>
-	map(InputIterator first, InputIterator last,
+	map(InputIterator first_it, InputIterator last_it,
 		const key_compare& comp = key_compare(),
 		const allocator_type& alloc = allocator_type())
 		: _comp(comp), _alloc(alloc), _root(NULL)
 	{
-		while (first != last)
+		while (first_it != last_it)
 		{
-			if (!_bst_lookup((*first).first, _root))
-				_root = _bst_insert(*first, _root);
-			first++;
+			if (!_bst_lookup((*first_it).first, _root))
+				_root = _bst_insert(*first_it, _root);
+			first_it++;
 		}
 	}
 	map(const map& x) : _comp(x._comp), _alloc(x._alloc)
@@ -60,6 +62,40 @@ class	ft::map
 	~map(void)
 	{
 		_bst_clear(_root);
+	}
+
+// iterator functions
+	iterator	begin(void)
+	{
+		return (iterator(_root, _get_min(_root)));
+	}
+	const_iterator	begin(void) const
+	{
+		return (const_iterator(_root, _get_min(_root)));
+	}
+	iterator	end(void)
+	{
+		return (iterator(_root, NULL));
+	}
+	const_iterator	end(void) const
+	{
+		return (const_iterator(_root, NULL));
+	}
+	reverse_iterator		rbegin(void)
+	{
+		return (reverse_iterator(end()));
+	}
+	reverse_iterator		rend(void)
+	{
+		return (reverse_iterator(begin()));
+	}
+	const_reverse_iterator	rbegin(void) const
+	{
+		return (const_reverse_iterator(end()));
+	}
+	const_reverse_iterator	rend(void) const
+	{
+		return (const_reverse_iterator(begin()));
 	}
 
 // size functions
@@ -87,10 +123,10 @@ class	ft::map
 			_root = _bst_insert(value_type(k, mapped_type()), _root);
 			current = _bst_lookup(k, _root);
 		}
-		return (current->data.second);
+		return (current->data->second);
 	}
 
-// modifier functions
+// modifier functions (some are defined outside the class because of a weird ass "variable has incomplete type")
 	pair<iterator,bool>	insert(const value_type& val)
 	{
 		node	*tmp;
@@ -101,16 +137,7 @@ class	ft::map
 		_root = _bst_insert(val, _root);
 		return (make_pair(iterator(_root, _bst_lookup(val.first, _root)), true));
 	}
-	iterator	insert(iterator position, const value_type& val)
-	{
-		node	*tmp;
-
-		tmp = _bst_lookup(val.first, _root);
-		if (tmp)
-			return (iterator(_root, tmp));
-		_root = _bst_insert(val, _root);
-		return (iterator(_root, _bst_lookup(val.first, _root)));
-	}
+	iterator	insert(typename map<Key, T, Compare, Alloc>::iterator position, const value_type& val);
 	template <class InputIterator>
 	void	insert(InputIterator first, InputIterator last)
 	{
@@ -121,27 +148,110 @@ class	ft::map
 			first++;
 		}
 	}
+	void	erase(iterator position);
+	size_type	erase(const key_type& k)
+	{
+		size_type	tmp;
+
+		tmp = 0;
+		if (_bst_lookup(k, _root))
+			tmp = 1;
+		_root = _bst_remove(k, _root);
+		return (tmp);
+	}
+	void	erase(iterator first, iterator last);
+	void	swap(map& x)
+	{
+		key_compare		comp_tmp = _comp;
+		allocator_type	alloc_tmp = _alloc;
+		node			*node_tmp = _root;
+
+		_comp = x._comp;
+		_alloc = x._alloc;
+		_root = x._root;
+		
+		x._comp = comp_tmp;
+		x._alloc = alloc_tmp;
+		x._root = node_tmp;
+	}
+	void	clear(void)
+	{
+		_bst_clear(_root);
+		_root = NULL;
+	}
+// observer functions
+	key_compare	key_comp(void) const
+	{
+		return (_comp);
+	}
+	value_compare	value_comp(void) const
+	{
+		return (_comp);
+	}
+	allocator_type	get_allocator(void) const
+	{
+		return (_alloc);
+	}
+//operation functions
+	iterator	find(const key_type& k)
+	{
+		return (iterator(_root, _bst_lookup(k, _root)));
+	}
+	const_iterator find (const key_type& k) const
+	{
+		return (const_iterator(_root, _bst_lookup(k, _root)));
+	}
+	size_type	count(const key_type& k) const
+	{
+		return (_bst_size_key(_root, k));
+	}
+	iterator	lower_bound(const key_type& k)
+	{
+		iterator	it = begin();
+		iterator	it_end = end();
+
+		while (it != it_end && _comp((*it).first, k))
+			it++;
+		return (it);
+	}
+	const_iterator	lower_bound(const key_type& k) const
+	{
+		const_iterator	it = begin();
+		const_iterator	it_end = end();
+
+		while (it != it_end && _comp((*it).first, k))
+			it++;
+		return (it);
+	}
+	iterator	upper_bound(const key_type& k)
+	{
+		reverse_iterator	it = rbegin();
+		reverse_iterator	it_end = rend();
+
+		while (it != it_end && _comp(k, (*it).first))
+			it++;
+		return (it.base());
+	}
+	const_iterator	upper_bound(const key_type& k) const
+	{
+		const_reverse_iterator	it = rbegin();
+		const_reverse_iterator	it_end = rend();
+
+		while (it != it_end && _comp(k, (*it).first))
+			it++;
+		return (it.base());
+	}
+	pair<const_iterator,const_iterator>	equal_range(const key_type& k) const
+	{
+		return (make_pair(lower_bound(k), upper_bound(k)));
+	}
+	pair<iterator,iterator>				equal_range(const key_type& k)
+	{
+		return (make_pair(lower_bound(k), upper_bound(k)));
+	}
 	void		print(void)				// temporary function /!/
 	{
 		_bst_print("", _root, false);
-	}
-
-// iterator functions
-	iterator	begin(void)
-	{
-		return (iterator(_root, _get_min(_root)));
-	}
-	const_iterator	begin(void) const
-	{
-		return (const_iterator(_root, _get_min(_root)));
-	}
-	iterator	end(void)
-	{
-		return (iterator(_root, NULL));
-	}
-	const_iterator	end(void) const
-	{
-		return (const_iterator(_root, NULL));
 	}
 
 	private :
@@ -153,6 +263,13 @@ class	ft::map
 	node			*_root;
 
 //BST functions
+	size_type	_bst_size_key(node *curr, const key_type& k) const
+	{
+		if (!curr)
+			return (0);
+		return (_bst_size_key(curr->left, k) + _bst_size_key(curr->right, k)
+			+ (curr->data->first == k));
+	}
 	void _bst_print(const std::string& prefix, const node* node, bool isLeft)
 	{
 		if( node != nullptr )
@@ -162,7 +279,7 @@ class	ft::map
 			std::cout << (isLeft ? "├──" : "└──" );
 
 			// print the value of the node
-			std::cout << node->data.first << " " << node->data.second << std::endl;
+			std::cout << node->data->first << " " << node->data->second << std::endl;
 
 			// enter the next tree level - left and right branch
 			_bst_print( prefix + (isLeft ? "│   " : "    "), node->left, true);
@@ -171,14 +288,16 @@ class	ft::map
 	}
 	node	*_bst_deep_copy(node const *other)
 	{
-		node	*curr;
-
+		node		*curr;
+	
 		if (other == NULL)
 		{
 			std::cout << "Bro wtf u doin" << std::endl; // à enlever plus tard /!/
 		}
 		curr = node_allocator_type(_alloc).allocate(1);
-		curr = new (curr) node(NULL, NULL, NULL, other->data);
+		curr = new (curr) node(NULL, NULL, NULL, NULL);
+		curr->data = _alloc.allocate(1);
+		curr->data = new (curr->data) value_type(*(other->data));
 		if (other->left)
 		{
 			curr->left = _bst_deep_copy(other->left);
@@ -191,13 +310,13 @@ class	ft::map
 		}
 		return (curr);
 	}
-	node	*_bst_lookup(const key_type &key, node *curr)
+	node	*_bst_lookup(const key_type &key, node *curr) const
 	{
 		if (!curr)
 			return (NULL);
-		if (curr->data.first == key)
+		if (curr->data->first == key)
 			return (curr);
-		if (key < curr->data.first)
+		if (_comp(key, curr->data->first))
 			return (_bst_lookup(key, curr->left));
 		return (_bst_lookup(key, curr->right));
 	}
@@ -205,7 +324,7 @@ class	ft::map
 	{
 		if (!curr)
 			return (NULL);
-		if (data.first <= curr->data.first)
+		if (_comp(data.first, curr->data->first))
 		{
 			if (curr->left)
 				return (_bst_insert_get_parent(data, curr->left));
@@ -217,39 +336,59 @@ class	ft::map
 	}
 	node	*_bst_insert(value_type new_data, node *root)
 	{	
-		node	*new_node;
-
+		node		*new_node;
+	
 		new_node = node_allocator_type(_alloc).allocate(1);
 		new_node = new (new_node)
-			node(_bst_insert_get_parent(new_data, root), NULL, NULL, new_data);
+			node(_bst_insert_get_parent(new_data, root), NULL, NULL, NULL);
+		new_node->data = _alloc.allocate(1);
+		new_node->data = new (new_node->data) value_type(new_data);
 		if (!new_node->parent)
 			return (new_node);
-		if (new_data.first <= new_node->parent->data.first)
+		if (_comp(new_data.first, new_node->parent->data->first))
 			new_node->parent->left = new_node;
 		else
 			new_node->parent->right = new_node;
 		return (root);
 	}
-	void	_bst_remove_zero_child(node *to_remove)
+	node	*_bst_highest_parent(node *root)
 	{
+		if (!root->parent)
+			return (root);
+		return (_bst_highest_parent(root->parent));
+	}
+	node	*_bst_remove_zero_child(node *to_remove)
+	{
+		node	*new_root = _bst_highest_parent(to_remove);
+
+		if (new_root == to_remove)
+			new_root = NULL;
 		if (to_remove->parent->left == to_remove)
 			to_remove->parent->left = NULL;
 		else if (to_remove->parent->right == to_remove)
 			to_remove->parent->right = NULL;
+		_alloc.deallocate(to_remove->data, 1);
 		node_allocator_type(_alloc).deallocate(to_remove, 1);
+		return (new_root);
 	}
-	void	_bst_remove_one_child(node *to_remove)
+	node	*_bst_remove_one_child(node *to_remove)
 	{
 		node	*child;
 
 		child = to_remove->left != NULL ? to_remove->left : to_remove->right;
-		if (to_remove->parent->left == to_remove)
-			to_remove->parent->left = child;
-		else if (to_remove->parent->right == to_remove)
-			to_remove->parent->right = child;
+		if (to_remove->parent)
+		{
+			if (to_remove->parent->left == to_remove)
+				to_remove->parent->left = child;
+			else if (to_remove->parent->right == to_remove)
+				to_remove->parent->right = child;
+		}
+		child->parent = to_remove->parent;
+		_alloc.deallocate(to_remove->data, 1);
 		node_allocator_type(_alloc).deallocate(to_remove, 1);
+		return (_bst_highest_parent(child));
 	}
-	void	_bst_remove_two_children(node *to_remove)
+	node	*_bst_remove_two_children(node *to_remove)
 	{
 		node	*child;
 
@@ -258,25 +397,27 @@ class	ft::map
 		{
 			child = child->left;
 		}
-		to_remove->data = child->data;
+		_alloc.deallocate(to_remove->data, 1);
+		to_remove->data = _alloc.allocate(1);
+		to_remove->data = new (to_remove->data) value_type(*(child->data));
 		if (child->left || child->right)
 			_bst_remove_one_child(child);
 		else
 			_bst_remove_zero_child(child);
+		return (_bst_highest_parent(to_remove));
 	}
-	node	*_bst_remove(value_type data, node *root)
+	node	*_bst_remove(const key_type &key, node *root)
 	{
-		node	*to_remove;
+		node		*to_remove;
 
-		if (!(to_remove = _bst_lookup(data.first, root)))
+		if (!(to_remove = _bst_lookup(key, root)))
 			return (root);
 		if (to_remove->left && to_remove->right)
-			_bst_remove_two_children(to_remove);
+			return (_bst_remove_two_children(to_remove));
 		else if ((to_remove->left != NULL) != (to_remove->right != NULL))
-			_bst_remove_one_child(to_remove);
+			return (_bst_remove_one_child(to_remove));
 		else
-			_bst_remove_zero_child(to_remove);
-		return (root == to_remove ? NULL : root);
+			return (_bst_remove_zero_child(to_remove));
 	}
 
 	size_type	_bst_size(node *root) const
@@ -291,6 +432,7 @@ class	ft::map
 		{
 			_bst_clear(root->left);
 			_bst_clear(root->right);
+			_alloc.deallocate(root->data, 1);
 			node_allocator_type(_alloc).deallocate(root, 1);
 		}
 	}
@@ -308,9 +450,9 @@ struct	ft::map<Key,T,Compare,Alloc>::node
 	node		*parent;
 	node		*left;
 	node		*right;
-	value_type	data;
+	value_type	*data;
 
-	node(node *new_parent, node *new_left, node *new_right, const value_type &new_data)
+	node(node *new_parent, node *new_left, node *new_right, value_type *new_data)
 		: parent(new_parent), left(new_left), right(new_right), data(new_data) {}
 };
 
@@ -363,7 +505,7 @@ class	ft::map<Key, T, Compare, Alloc>::iterator : public ft::base_iterator<bidir
 	}
 	value_type			&operator*(void)
 	{
-		return (_current->data);
+		return (*(_current->data));
 	}
 	value_type const	&operator*(void) const
 	{
@@ -407,10 +549,10 @@ class	ft::map<Key, T, Compare, Alloc>::iterator : public ft::base_iterator<bidir
 			_current = _get_previous_node(_current);
 		return (copy);
 	}
-	// operator	const_iterator() const
-	// {
-	// 	return (const_iterator(_data));
-	// }
+	operator	const_iterator() const
+	{
+		return (const_iterator(_root, _current));
+	}
 
 	private :
 
@@ -423,7 +565,7 @@ class	ft::map<Key, T, Compare, Alloc>::iterator : public ft::base_iterator<bidir
 	{
 		if (!origin->parent)
 			return (NULL);
-		else if (origin->parent->data > origin->data)
+		else if (key_compare()(origin->data->first, origin->parent->data->first))
 			return (origin->parent);
 		else
 			return (_get_next_bigger_parent(origin->parent));
@@ -445,7 +587,7 @@ class	ft::map<Key, T, Compare, Alloc>::iterator : public ft::base_iterator<bidir
 	{
 		if (!origin->parent)
 			return (NULL);
-		else if (origin->parent->data < origin->data)
+		else if (key_compare()(origin->parent->data->first, origin->data->first))
 			return (origin->parent);
 		else
 			return (_get_next_smaller_parent(origin->parent));
@@ -493,19 +635,19 @@ class	ft::map<Key, T, Compare, Alloc>::const_iterator : public ft::base_iterator
 	}
 	value_type const	&operator*(void)
 	{
-		return (_current->data);
+		return (*(_current->data));
 	}
 	value_type const	&operator*(void) const
 	{
-		return (_current->data);
+		return (*(_current->data));
 	}
 	value_type	const	*operator->(void)
 	{
-		return (&(_current->data));
+		return (_current->data);
 	}
 	value_type const	*operator->() const
 	{
-		return (&(_current->data));
+		return (_current->data);
 	}
 	const_iterator		&operator++() //prefix
 	{
@@ -553,7 +695,7 @@ class	ft::map<Key, T, Compare, Alloc>::const_iterator : public ft::base_iterator
 	{
 		if (!origin->parent)
 			return (NULL);
-		else if (origin->parent->data > origin->data)
+		else if (key_compare()(origin->data->first, origin->parent->data->first))
 			return (origin->parent);
 		else
 			return (_get_next_bigger_parent(origin->parent));
@@ -575,7 +717,7 @@ class	ft::map<Key, T, Compare, Alloc>::const_iterator : public ft::base_iterator
 	{
 		if (!origin->parent)
 			return (NULL);
-		else if (origin->parent->data < origin->data)
+		else if (key_compare()(origin->parent->data->first, origin->data->first))
 			return (origin->parent);
 		else
 			return (_get_next_smaller_parent(origin->parent));
@@ -594,3 +736,53 @@ class	ft::map<Key, T, Compare, Alloc>::const_iterator : public ft::base_iterator
 		return (tree);
 	}
 };
+
+template <class Key, class T, class Compare, class Alloc>
+typename ft::map<Key, T, Compare, Alloc>::iterator
+	ft::map<Key, T, Compare, Alloc>::insert(
+	typename ft::map<Key, T, Compare, Alloc>::iterator position,
+	const typename ft::map<Key, T, Compare, Alloc>::value_type& val)
+{
+	node	*tmp;
+
+	(void) position;
+	tmp = _bst_lookup(val.first, _root);
+	if (tmp)
+		return (iterator(_root, tmp));
+	_root = _bst_insert(val, _root);
+	return (iterator(_root, _bst_lookup(val.first, _root)));
+}
+template <class Key, class T, class Compare, class Alloc>
+void	ft::map<Key, T, Compare, Alloc>::erase
+	(typename ft::map<Key, T, Compare, Alloc>::iterator position)
+{
+	_root = _bst_remove((*position).first, _root);
+}
+
+template <class Key, class T, class Compare, class Alloc>
+void	ft::map<Key, T, Compare, Alloc>::erase(typename ft::map<Key, T, Compare, Alloc>::iterator first, typename ft::map<Key, T, Compare, Alloc>::iterator last)
+{
+	iterator	first_clone(first);
+	size_type	size;
+	size_type	i;
+	key_type	*targets;
+	typename allocator_type::template rebind<key_type>::other tmp_alloc(_alloc);
+
+	size = 0;
+	while (first != last)
+	{
+		size++;
+		first++;
+	}
+	targets = tmp_alloc.allocate(size);
+	i = 0;
+	while (first_clone != last)
+	{
+		targets[i++] = (*first_clone).first;
+		first_clone++;
+	}
+	i = 0;
+	while (_comp(i, size))
+		_root = _bst_remove(targets[i++], _root);
+	tmp_alloc.deallocate(targets, i);
+}

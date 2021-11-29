@@ -5,10 +5,10 @@
 int main(void)
 {
 	ft::vector<int> a(3, 12);
-	a._data[0] = 2;
-	a._data[1] = 3;
-	a._data[2] = 4;
-
+	a[0] = 2;
+	a[1] = 3;
+	a[2] = 4;
+	
 	ft::vector<int>::reverse_iterator it1 = a.rbegin(); //default constructor
 	ft::vector<int>::reverse_iterator it2 = it1; //copy assignation
 	ft::vector<int>::reverse_iterator it3(it2); //copy constructor

@@ -20,12 +20,12 @@ class	ft::vector
 	typedef	typename allocator_type::pointer					pointer;
 	typedef	typename allocator_type::const_pointer				const_pointer;
 	typedef			 size_t										size_type;
-	typedef	typename iterator_traits<iterator>::difference_type	difference_type;
 
 	class	iterator;
 	class	const_iterator;
 	typedef	ft::reverse_iterator<iterator>			reverse_iterator;
 	typedef	ft::reverse_iterator<const_iterator>	const_reverse_iterator;
+	typedef	typename ft::iterator_traits<typename iterator::base_iterator>::difference_type	difference_type;
 
 //constructors
 	//default

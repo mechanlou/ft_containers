@@ -37,7 +37,9 @@ class	ft::reverse_iterator
 	}
 	reference	operator*(void) const
 	{
-		return (*(_iterator - 1));
+		iterator	tmp(_iterator);
+		--tmp;
+		return (*tmp);
 	}
 	reverse_iterator operator+(difference_type n) const
 	{

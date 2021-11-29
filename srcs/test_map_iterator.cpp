@@ -22,19 +22,33 @@ int main(void)
 	a[15] = "15";
 	a[45] = "45";
 	a[50] = "50";
-	const ft::map<int, std::string> b(a);
 
-	ft::map<int, std::string>::const_iterator it = b.begin();
-	while (it != b.end())
+	ft::map<int, std::string>::iterator it = a.begin();
+	while (it != a.end())
 	{
 		std::cout << (*it).first << " : " << (*it).second << std::endl;
 		it++;
 	}
-	it = b.end();
-	while (it != b.begin())
+	it = a.end();
+	while (it != a.begin())
 	{
 		it--;
 		std::cout << (*it).first << " : " << (*it).second << std::endl;
+	}
+
+	const ft::map<int, std::string> b(a);
+
+	ft::map<int, std::string>::const_iterator const_it = b.begin();
+	while (const_it != b.end())
+	{
+		std::cout << (*const_it).first << " : " << (*const_it).second << std::endl;
+		const_it++;
+	}
+	const_it = b.end();
+	while (const_it != b.begin())
+	{
+		const_it--;
+		std::cout << (*const_it).first << " : " << (*const_it).second << std::endl;
 	}
 	return (0);
 }
