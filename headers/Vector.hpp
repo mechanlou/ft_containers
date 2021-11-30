@@ -3,6 +3,7 @@
 #include "externals.hpp"
 #include "Base_iterator.hpp"
 #include "Is_integral.hpp"
+#include "Iterator_traits.hpp"
 #include "ft.hpp"
 
 #define CAPACITY_SCALE 2

@@ -20,6 +20,7 @@ namespace	ft
 	template <class T1, class T2> pair<T1,T2>	make_pair(T1 x, T2 y);
 	template < class Key, class T, class Compare = std::less<Key>,
 		class Alloc = std::allocator<pair<const Key,T> > > class map;
+	template <class T, class Container = vector<T> > class stack;
 
 // enable_if
 	template<bool Cond, class T> struct enable_if {};
