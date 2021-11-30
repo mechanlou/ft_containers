@@ -35,9 +35,14 @@ class	ft::vector
 	{
 		_data = allocator_type(alloc).allocate(_capacity, 0);
 	}
+	//range
+	template <class InputIterator>
+	vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) : _allocator(alloc)
+	{
+		_range_fill_constructor(first, last, alloc, typename ft::is_integral<InputIterator>::type());
+	}
 	//fill	
-	explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
-		: _allocator(alloc), _size(n), _capacity(CAPACITY_SCALE * _size)
+	explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _allocator(alloc), _size(n), _capacity(CAPACITY_SCALE * _size)
 	{
 		size_t	i;
 
@@ -45,21 +50,6 @@ class	ft::vector
 		i = 0;
 		while (i < _size)
 			_data[i++] = val;
-	}
-	//range
-	template <class InputIterator>
-	vector(InputIterator first,
-		typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type last,
-		const allocator_type& alloc = allocator_type()) : _allocator(alloc)
-	{
-		size_t	i;
-
-		_size = last - first;
-		_capacity = CAPACITY_SCALE * _size;
-		_data = allocator_type(alloc).allocate(_capacity, 0);
-		i = 0;
-		while (i < _size)
-			_data[i++] = *(first++);
 	}
 	//copy
 	vector(const vector& src) : _allocator(allocator_type(src._allocator)), _size(src._size), _capacity(src._capacity)
@@ -493,7 +483,32 @@ class	ft::vector
 	allocator_type	_allocator;
 	size_type		_size;
 	size_type		_capacity;
-	value_type		*_data;	
+	value_type		*_data;
+
+	template <class InputIterator>
+	void	_range_fill_constructor(InputIterator &first, InputIterator &last, const allocator_type& alloc, void *)
+	{
+		size_t	i;
+
+		_size = last - first;
+		_capacity = CAPACITY_SCALE * _size;
+		_data = allocator_type(alloc).allocate(_capacity, 0);
+		i = 0;
+		while (i < _size)
+			_data[i++] = *(first++);
+	}
+	template <class InputIterator>
+	void	_range_fill_constructor(InputIterator &n, InputIterator &val, const allocator_type &alloc, int)
+	{
+		size_t	i;
+
+		_size = n;
+		_capacity = CAPACITY_SCALE * _size;
+		_data = allocator_type(alloc).allocate(_capacity, 0);
+		i = 0;
+		while (i < _size)
+			_data[i++] = val;
+	}		
 };
 
 //iterator

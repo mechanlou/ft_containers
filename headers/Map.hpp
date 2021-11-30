@@ -5,6 +5,7 @@
 #include "Pair.hpp"
 #include "Iterator_traits.hpp"
 #include "Reverse_iterator.hpp"
+#include <limits>
 
 template <class Key, class T, class Compare, class Alloc>
 class	ft::map
@@ -56,6 +57,7 @@ class	ft::map
 	{
 		_bst_clear(_root);
 		_root = _bst_deep_copy(x._root);
+		return (*this);
 	}
 
 // destructor
@@ -272,7 +274,7 @@ class	ft::map
 	}
 	void _bst_print(const std::string& prefix, const node* node, bool isLeft)
 	{
-		if( node != nullptr )
+		if( node != NULL )
 		{
 			std::cout << prefix;
 
@@ -513,11 +515,11 @@ class	ft::map<Key, T, Compare, Alloc>::iterator : public ft::base_iterator<bidir
 	}
 	value_type			*operator->(void)
 	{
-		return (&(_current->data));
+		return (_current->data);
 	}
 	value_type const		*operator->() const
 	{
-		return (&(_current->data));
+		return (_current->data);
 	}
 	iterator	&operator++() //prefix
 	{

@@ -6,6 +6,8 @@ HEADERS = \
 			headers/ft.hpp \
 			headers/Pair.hpp \
 			headers/Map.hpp \
+			headers/Equal.hpp \
+			headers/Lexicographical_compare.hpp \
 			headers/Stack.hpp \
 			headers/externals.hpp \
 			headers/Vector.hpp \
@@ -16,7 +18,7 @@ HEADERS = \
 			# headers/Enable_if.hpp \
 
 SRCS = \
-		srcs/test_stack.cpp
+		srcs/test_vector_constructors.cpp
 
 OBJS = ${SRCS:.cpp=.o}
 
