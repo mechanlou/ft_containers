@@ -22,6 +22,9 @@ namespace	ft
 		class Alloc = std::allocator<pair<const Key,T> > > class map;
 	template <class T, class Container = vector<T> > class stack;
 
+	// template <class T, class Container>
+	// bool	operator==(const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs);
+
 // enable_if
 	template<bool Cond, class T> struct enable_if {};
 	template<class T> struct enable_if<true, T> { typedef T type; };

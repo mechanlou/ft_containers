@@ -17,6 +17,11 @@ int main(void)
 	b.push("originalité");
 
 	std::cout << "a == b : " << (a == b) << std::endl;
+	std::cout << "a != b : " << (a != b) << std::endl;
+	std::cout << "a < b : " << (a < b) << std::endl;
+	std::cout << "a <= b : " << (a <= b) << std::endl;
+	std::cout << "a > b : " << (a > b) << std::endl;
+	std::cout << "a >= b : " << (a >= b) << std::endl;
 
 	std::cout << "a.top() : " << a.top() << std::endl;
 	std::cout << "a.size() : " << a.size() << std::endl;
@@ -24,5 +29,12 @@ int main(void)
 	std::cout << "a.size() after pop : " << a.size() << std::endl;
 	std::cout << "a.empty ? " << a.empty() << std::endl;
 	std::cout << "a.top() : " << a.top() << std::endl;
+
+	std::cout << "a == b : " << (a == b) << std::endl;
+	std::cout << "a != b : " << (a != b) << std::endl;
+	std::cout << "a < b : " << (a < b) << std::endl;
+	std::cout << "a <= b : " << (a <= b) << std::endl;
+	std::cout << "a > b : " << (a > b) << std::endl;
+	std::cout << "a >= b : " << (a >= b) << std::endl;
 	return (0);
 }
