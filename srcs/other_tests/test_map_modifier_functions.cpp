@@ -29,42 +29,34 @@ int main(void)
 	a[45] = "45";
 	a[50] = "50";
 	
-	a.print();
 
 	std::cout << "insert 100 " << (a.insert(ft::make_pair(100, "100"))).second << std::endl;
 	std::cout << "insert 100 " << (a.insert(ft::make_pair(100, "100"))).second << std::endl;
 	std::cout << "insert -666 hint : " << (*a.insert(a.begin(), ft::make_pair(-666, "-666"))).second << std::endl;
 
-	a.print();
 
 	std::cout << "insert range " << std::endl;
 	a.insert(src.begin(), src.end());
 
-	a.print();
 
 	std::cout << "erase iterator " << std::endl;
 	a.erase(a.begin());
 	std::cout << "erase key " << a.erase(25) << std::endl;
 	
-	a.print();
 
 	ft::map<int, std::string>::iterator it = a.begin();
 	it++; it++;
 	a.erase(it, a.end());
-	a.print();
 
 	b[89] = "truc";
 	b[-7] = "machin";
 
 	std::cout << "container b " << std::endl;
-	b.print();
 
 	a.swap(b);
 	std::cout << "container b " << std::endl;
-	b.print();
 
 	b.clear();
-	b.print();
 
 	a.key_comp();
 	a.value_comp();

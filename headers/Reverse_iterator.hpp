@@ -21,7 +21,7 @@ class	ft::reverse_iterator
 	template <class Iter>
 	reverse_iterator(const reverse_iterator<Iter>& rev_it)
 	{
-		_iterator = rev_it._iterator;
+		_iterator = rev_it.base();
 	}
 	explicit reverse_iterator(iterator_type src)
 	{

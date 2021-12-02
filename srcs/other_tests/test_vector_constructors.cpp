@@ -27,11 +27,5 @@ int	main(void)
 	{
 		std::cout << *(it++) << std::endl;
 	}
-	// default_vec._data[0] = 7;
-	// std::cout << "default " << default_vec._data[0] << std::endl;
-
-	// std::cout << "fill " << fill_vec._data[1] << std::endl;
-
-	// std::cout << "range " << range_vec._data[2] << std::endl;
 	return (0);
 }

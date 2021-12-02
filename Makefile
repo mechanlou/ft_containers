@@ -1,4 +1,5 @@
-NAME = test
+NAME_STD = test_std
+NAME_FT = test_ft
 
 HEADERS_FILE = headers
 
@@ -15,28 +16,33 @@ HEADERS = \
 			headers/Iterator_traits.hpp \
 			headers/Base_iterator.hpp \
 			headers/Reverse_iterator.hpp
-			# headers/Enable_if.hpp \
 
-SRCS = \
-		srcs/test_vector_constructors.cpp
+SRC_FT = srcs/test_ft.cpp
+SRC_STD = srcs/test_std.cpp
 
-OBJS = ${SRCS:.cpp=.o}
+OBJ_FT = ${SRC_FT:.cpp=.o}
+OBJ_STD = ${SRC_STD:.cpp=.o}
 
 .PHONY: all clean fclean re
 
-all: $(NAME)
+all: $(NAME_FT) $(NAME_STD)
 
-$(NAME): $(OBJS) $(HEADERS)
-	clang++ $(OBJS) -o $(NAME)
+$(NAME_FT): $(OBJ_FT) $(HEADERS)
+	clang++ $(OBJ_FT) -o $(NAME_FT)
 
-$(OBJS): %.o: %.cpp $(HEADERS)
-	clang++ -Wall -Wextra -Werror -std=c++98 -g3 -I$(HEADERS_FILE) -c $< -o $@
-	#clang++ -std=c++98 -I$(HEADERS_FILE) -c $< -o $@
+$(NAME_STD): $(OBJ_STD) $(HEADERS)
+	clang++ $(OBJ_STD) -o $(NAME_STD)
+
+$(OBJ_FT): %.o: %.cpp $(HEADERS)
+	clang++ -Wall -Wextra -Werror -std=c++98 -I$(HEADERS_FILE) -c $< -o $@
+
+$(OBJ_STD): %.o: %.cpp $(HEADERS)
+	clang++ -Wall -Wextra -Werror -std=c++98 -I$(HEADERS_FILE) -c $< -o $@
 
 clean:
-	rm -f $(OBJS)
+	rm -f $(OBJ_FT) $(OBJ_STD)
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(NAME_FT) $(NAME_STD)
 
 re: fclean all

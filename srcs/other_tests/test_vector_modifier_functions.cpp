@@ -54,8 +54,8 @@ int	main(void)
 	}
 	std::cout << std::endl;
 	
-	std::cout << "resize(max_size)" << std::endl;
-	a.resize(a.max_size(), 1427);
+	std::cout << "resize(capacity)" << std::endl;
+	a.resize(a.capacity(), 1427);
 	std::cout << "size : " << a.size() << " max_size : " << a.max_size() << std::endl << std::endl;
 
 	a.insert(a.begin(), 1995);

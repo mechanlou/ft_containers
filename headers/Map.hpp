@@ -154,7 +154,7 @@ class	ft::map
 	size_type	erase(const key_type& k)
 	{
 		size_type	tmp;
-
+		
 		tmp = 0;
 		if (_bst_lookup(k, _root))
 			tmp = 1;
@@ -251,10 +251,6 @@ class	ft::map
 	{
 		return (make_pair(lower_bound(k), upper_bound(k)));
 	}
-	void		print(void)				// temporary function /!/
-	{
-		_bst_print("", _root, false);
-	}
 
 	private :
 
@@ -271,22 +267,6 @@ class	ft::map
 			return (0);
 		return (_bst_size_key(curr->left, k) + _bst_size_key(curr->right, k)
 			+ (curr->data->first == k));
-	}
-	void _bst_print(const std::string& prefix, const node* node, bool isLeft)
-	{
-		if( node != NULL )
-		{
-			std::cout << prefix;
-
-			std::cout << (isLeft ? "├──" : "└──" );
-
-			// print the value of the node
-			std::cout << node->data->first << " " << node->data->second << std::endl;
-
-			// enter the next tree level - left and right branch
-			_bst_print( prefix + (isLeft ? "│   " : "    "), node->left, true);
-			_bst_print( prefix + (isLeft ? "│   " : "    "), node->right, false);
-		}
 	}
 	node	*_bst_deep_copy(node const *other)
 	{
@@ -365,9 +345,9 @@ class	ft::map
 
 		if (new_root == to_remove)
 			new_root = NULL;
-		if (to_remove->parent->left == to_remove)
+		if (to_remove->parent && to_remove->parent->left == to_remove)
 			to_remove->parent->left = NULL;
-		else if (to_remove->parent->right == to_remove)
+		else if (to_remove->parent && to_remove->parent->right == to_remove)
 			to_remove->parent->right = NULL;
 		_alloc.deallocate(to_remove->data, 1);
 		node_allocator_type(_alloc).deallocate(to_remove, 1);
@@ -440,6 +420,8 @@ class	ft::map
 	}
 	node	*_get_min(node *tree) const
 	{
+		if (!tree)
+			return (NULL);
 		if (tree->left)
 			return (_get_min(tree->left));
 		return (tree);
@@ -499,11 +481,11 @@ class	ft::map<Key, T, Compare, Alloc>::iterator : public ft::base_iterator<bidir
 	}
 	bool		operator==(iterator const &src) const
 	{
-		return (_root == src._root && _current == src._current);
+		return (_current == src._current);
 	}
 	bool		operator!=(iterator const &src) const
 	{
-		return (_current != src._current || _root != src._root);
+		return (_current != src._current);
 	}
 	value_type			&operator*(void)
 	{
@@ -511,7 +493,7 @@ class	ft::map<Key, T, Compare, Alloc>::iterator : public ft::base_iterator<bidir
 	}
 	value_type const	&operator*(void) const
 	{
-		return (_current->data);
+		return (*(_current->data));
 	}
 	value_type			*operator->(void)
 	{
@@ -629,23 +611,15 @@ class	ft::map<Key, T, Compare, Alloc>::const_iterator : public ft::base_iterator
 	}
 	bool				operator==(const_iterator const &src) const
 	{
-		return (_root == src._root && _current == src._current);
+		return (_current == src._current);
 	}
 	bool				operator!=(const_iterator const &src) const
 	{
-		return (_current != src._current || _root != src._root);
-	}
-	value_type const	&operator*(void)
-	{
-		return (*(_current->data));
+		return (_current != src._current);
 	}
 	value_type const	&operator*(void) const
 	{
 		return (*(_current->data));
-	}
-	value_type	const	*operator->(void)
-	{
-		return (_current->data);
 	}
 	value_type const	*operator->() const
 	{
@@ -681,10 +655,6 @@ class	ft::map<Key, T, Compare, Alloc>::const_iterator : public ft::base_iterator
 			_current = _get_previous_node(_current);
 		return (copy);
 	}
-	// operator	const_iterator() const
-	// {
-	// 	return (const_iterator(_data));
-	// }
 
 	private :
 

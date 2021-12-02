@@ -23,12 +23,8 @@ int main(void)
 	ft::map<int, std::string>					b(vec.begin(), vec.end());
 	ft::map<int, std::string>					c(b);
 
-	b.print();
 	b[-1] = "zob";
 	b[7] = "chepa";
-	b.print();
 	b[7] = "i rember :D";
-	b.print();
-	c.print();
 	return (0);
 }

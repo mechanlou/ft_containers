@@ -4,6 +4,7 @@
 #include "Base_iterator.hpp"
 #include "Is_integral.hpp"
 #include "Iterator_traits.hpp"
+#include "Reverse_iterator.hpp"
 #include "ft.hpp"
 #include <limits>
 
@@ -37,14 +38,14 @@ class	ft::vector
 	}
 	//fill	
 	explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
-		: _allocator(alloc), _size(n), _capacity(CAPACITY_SCALE * _size)
+		: _allocator(alloc), _size(n), _capacity(CAPACITY_SCALE * n)
 	{
 		size_t	i;
 
-		_data = allocator_type(alloc).allocate(_capacity, 0);
+		_data = _allocator.allocate(_capacity);
 		i = 0;
 		while (i < _size)
-			_data[i++] = val;
+			new (_data + i++) value_type(val);
 	}
 	//range
 	template <class InputIterator>
@@ -304,7 +305,9 @@ class	ft::vector
 			_allocator.deallocate(_data, _size);
 			_data = new_data;
 		}
-		_data[_size++] = val;
+		value_type *tmp = _data + _size;
+		tmp = new (tmp) value_type(val);
+		_size++;
 	}
 	void		pop_back(void)
 	{
@@ -354,11 +357,13 @@ class	ft::vector
 		iterator	it;
 		iterator	it_end;
 		size_type	i;
+		size_type	new_capacity;
 
 		if (_capacity < _size + n)
 		{
-			_capacity = (_size + n) * CAPACITY_SCALE;
-			new_data = _allocator.allocate(_capacity);
+			_size += n;
+			new_capacity = _size * CAPACITY_SCALE;
+			new_data = _allocator.allocate(new_capacity);
 			i = 0;
 			it = begin();
 			it_end = end();
@@ -370,11 +375,13 @@ class	ft::vector
 			new_data[i++] = val;
 			while (it != it_end)
 				new_data[i++] = *(it++);
-			_allocator.deallocate(_data, _size);
+			_allocator.deallocate(_data, _capacity);
+			_capacity = new_capacity;
 			_data = new_data;
 		}
 		else
 		{
+			_size += n;
 			it = end() + (n - 1);
 			while (it != position + (n - 1))
 			{
@@ -384,7 +391,6 @@ class	ft::vector
 			while (it != position - 1)
 				*(it--) = val;
 		}
-		_size += n;
 	}
 	template <class InputIterator>
     void	insert(typename vector<T>::iterator position, InputIterator first,
@@ -407,7 +413,8 @@ class	ft::vector
 				new_data[i++] = *(data_it++);
 			while (first != last)
 				new_data[i++] = *(first++);
-			while (data_it != data_end)
+			data_end = end();
+			while (data_it < data_end)
 				new_data[i++] = *(data_it++);
 			_allocator.deallocate(_data, _size);
 			_data = new_data;
@@ -448,10 +455,10 @@ class	ft::vector
 			(*it).~value_type();
 			*(it++) = *(next++);
 		}
-		while (next != it_end)
+		while (next < it_end)
 			*(it++) = *(next++);
-		_size -= last - first;
-		return (last);
+		_size -= (last - first);
+		return (first);
 	}
 	void	swap(vector& x)
 	{
@@ -520,6 +527,14 @@ class	ft::vector<T, Alloc>::iterator : public base_iterator<random_access_iterat
 	{
 		return (_data != src._data);
 	}
+	bool		operator==(const_iterator const &src) const
+	{
+		return (_data == src._data);
+	}
+	bool		operator!=(const_iterator const &src) const
+	{
+		return (_data != src._data);
+	}
 	T			&operator*(void)
 	{
 		return (*_data);
@@ -558,11 +573,21 @@ class	ft::vector<T, Alloc>::iterator : public base_iterator<random_access_iterat
 		_data--;
 		return (copy);
 	}
-	iterator	operator+(typename base_iterator<random_access_iterator_tag, T>::difference_type const &len) const
+	friend iterator	operator+(iterator const &lhs, typename
+		base_iterator<random_access_iterator_tag, T>::difference_type const &rhs)
 	{
 		iterator	result;
 
-		result._data = _data + len;
+		result._data = lhs._data + rhs;
+		return (result);
+	}
+	friend iterator	operator+(typename
+		base_iterator<random_access_iterator_tag, T>::difference_type const &lhs,
+		iterator const &rhs)
+	{
+		iterator	result;
+
+		result._data = rhs._data + lhs;
 		return (result);
 	}
 	typename base_iterator<random_access_iterator_tag, T>::difference_type	operator-(iterator const &other) const
@@ -592,6 +617,22 @@ class	ft::vector<T, Alloc>::iterator : public base_iterator<random_access_iterat
 		return (_data <= other._data);
 	}
 	bool		operator>=(iterator const &other) const
+	{
+		return (_data >= other._data);
+	}
+	bool		operator<(const_iterator const &other) const
+	{
+		return (_data < other._data);
+	}
+	bool		operator>(const_iterator const &other) const
+	{
+		return (_data > other._data);
+	}
+	bool		operator<=(const_iterator const &other) const
+	{
+		return (_data <= other._data);
+	}
+	bool		operator>=(const_iterator const &other) const
 	{
 		return (_data >= other._data);
 	}
@@ -732,6 +773,13 @@ class	ft::vector<T, Alloc>::const_iterator : public base_iterator<random_access_
 	{
 		return (_data[n]);
 	}
+
+	friend bool	iterator::operator==(const_iterator const &src) const;
+	friend bool	iterator::operator!=(const_iterator const &src) const;
+	friend bool	iterator::operator<(const_iterator const &src) const;
+	friend bool	iterator::operator>(const_iterator const &src) const;
+	friend bool	iterator::operator<=(const_iterator const &src) const;
+	friend bool	iterator::operator>=(const_iterator const &src) const;
 
 	private :
 

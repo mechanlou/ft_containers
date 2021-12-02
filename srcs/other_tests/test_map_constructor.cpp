@@ -7,8 +7,7 @@
 
 int main(void)
 {
-	std::cout << "Oy cunt" << std::endl << std::endl;
-	std::vector<ft::pair<int, std::string> >	vec(4);
+	ft::vector<ft::pair<int, std::string> >	vec(4);
 
 	vec[0].first = 0;
 	vec[0].second = "ok";
@@ -22,9 +21,5 @@ int main(void)
 	ft::map<int, std::string>					a;
 	ft::map<int, std::string>					b(vec.begin(), vec.end());
 	ft::map<int, std::string>					c(b);
-
-	a.print();
-	b.print();
-	c.print();
 	return (0);
 }
