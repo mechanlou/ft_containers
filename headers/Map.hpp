@@ -69,19 +69,19 @@ class	ft::map
 // iterator functions
 	iterator	begin(void)
 	{
-		return (iterator(_root, _get_min(_root)));
+		return (iterator(&_root, _get_min(_root)));
 	}
 	const_iterator	begin(void) const
 	{
-		return (const_iterator(_root, _get_min(_root)));
+		return (const_iterator(&_root, _get_min(_root)));
 	}
 	iterator	end(void)
 	{
-		return (iterator(_root, NULL));
+		return (iterator(&_root, NULL));
 	}
 	const_iterator	end(void) const
 	{
-		return (const_iterator(_root, NULL));
+		return (const_iterator(&_root, NULL));
 	}
 	reverse_iterator		rbegin(void)
 	{
@@ -135,9 +135,9 @@ class	ft::map
 
 		tmp = _bst_lookup(val.first, _root);
 		if (tmp)
-			return (make_pair(iterator(_root, tmp), false));
+			return (make_pair(iterator(&_root, tmp), false));
 		_root = _bst_insert(val, _root);
-		return (make_pair(iterator(_root, _bst_lookup(val.first, _root)), true));
+		return (make_pair(iterator(&_root, _bst_lookup(val.first, _root)), true));
 	}
 	iterator	insert(typename map<Key, T, Compare, Alloc>::iterator position, const value_type& val);
 	template <class InputIterator>
@@ -197,11 +197,11 @@ class	ft::map
 //operation functions
 	iterator	find(const key_type& k)
 	{
-		return (iterator(_root, _bst_lookup(k, _root)));
+		return (iterator(&_root, _bst_lookup(k, _root)));
 	}
 	const_iterator find (const key_type& k) const
 	{
-		return (const_iterator(_root, _bst_lookup(k, _root)));
+		return (const_iterator(&_root, _bst_lookup(k, _root)));
 	}
 	size_type	count(const key_type& k) const
 	{
@@ -469,7 +469,7 @@ class	ft::map<Key, T, Compare, Alloc>::iterator : public ft::base_iterator<bidir
 	public :
 
 	iterator(void) {}
-	iterator(node *root, node *start) : _root(root), _current(start) {}
+	iterator(node **root, node *start) : _root(root), _current(start) {}
 	iterator(iterator const &src) : _root(src._root), _current(src._current) {}
 	virtual	~iterator(void) {}
 
@@ -518,7 +518,7 @@ class	ft::map<Key, T, Compare, Alloc>::iterator : public ft::base_iterator<bidir
 	iterator	&operator--() //prefix
 	{
 		if (!_current)
-			_current = _get_max(_root);
+			_current = _get_max(*_root);
 		else
 			_current = _get_previous_node(_current);
 		return (*this);
@@ -528,7 +528,7 @@ class	ft::map<Key, T, Compare, Alloc>::iterator : public ft::base_iterator<bidir
 		iterator	copy(*this);
 
 		if (!_current)
-			_current = _get_max(_root);
+			_current = _get_max(*_root);
 		else
 			_current = _get_previous_node(_current);
 		return (copy);
@@ -540,7 +540,7 @@ class	ft::map<Key, T, Compare, Alloc>::iterator : public ft::base_iterator<bidir
 
 	private :
 
-	node *_root;
+	node **_root;
 	node *_current;
 
 // private functions
@@ -599,7 +599,7 @@ class	ft::map<Key, T, Compare, Alloc>::const_iterator : public ft::base_iterator
 	public :
 
 	const_iterator(void) {}
-	const_iterator(node *root, node *start) : _root(root), _current(start) {}
+	const_iterator(node * const *root, node *start) : _root(root), _current(start) {}
 	const_iterator(const_iterator const &src) : _root(src._root), _current(src._current) {}
 	virtual	~const_iterator(void) {}
 
@@ -640,7 +640,7 @@ class	ft::map<Key, T, Compare, Alloc>::const_iterator : public ft::base_iterator
 	const_iterator		&operator--() //prefix
 	{
 		if (!_current)
-			_current = _get_max(_root);
+			_current = _get_max(*_root);
 		else
 			_current = _get_previous_node(_current);
 		return (*this);
@@ -650,7 +650,7 @@ class	ft::map<Key, T, Compare, Alloc>::const_iterator : public ft::base_iterator
 		const_iterator	copy(*this);
 
 		if (!_current)
-			_current = _get_max(_root);
+			_current = _get_max(*_root);
 		else
 			_current = _get_previous_node(_current);
 		return (copy);
@@ -658,7 +658,7 @@ class	ft::map<Key, T, Compare, Alloc>::const_iterator : public ft::base_iterator
 
 	private :
 
-	node const *_root;
+	node * const *_root;
 	node const *_current;
 
 // private functions
@@ -720,9 +720,9 @@ typename ft::map<Key, T, Compare, Alloc>::iterator
 	(void) position;
 	tmp = _bst_lookup(val.first, _root);
 	if (tmp)
-		return (iterator(_root, tmp));
+		return (iterator(&_root, tmp));
 	_root = _bst_insert(val, _root);
-	return (iterator(_root, _bst_lookup(val.first, _root)));
+	return (iterator(&_root, _bst_lookup(val.first, _root)));
 }
 template <class Key, class T, class Compare, class Alloc>
 void	ft::map<Key, T, Compare, Alloc>::erase

@@ -68,7 +68,7 @@ class ft::stack
 		return (lhs._container >= rhs._container);
 	}
 
-	private :
+	protected :
 
 	container_type	_container;
 };
